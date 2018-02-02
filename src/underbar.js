@@ -102,6 +102,32 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    var uniqueArray = [];
+    //faster implementation
+    if (isSorted && !iterator){
+      _each(array, function(val, i){
+        if (i==0 || !val === array[i-1]){ //short circuit to prevent index out of range error
+          singleArray.push(val);
+        }
+      });
+   
+    }else if (iterator){
+      var uniqueMaps = [];
+      _.each(_.map(array,iterator), function(val, i){
+          if (_.indexOf(uniqueMaps, val)==-1){
+            uniqueMaps.push(val);
+            uniqueArray.push(array[i]);
+        }
+      });
+      
+    }else{
+      _.each(array, function(val){
+        if (_.indexOf(uniqueArray, val)==-1){
+          uniqueArray.push(val);
+        }
+      });
+    };
+    return uniqueArray; 
   };
 
 
@@ -157,7 +183,7 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-      if (!accumulator && accumulator!==0){
+      if (accumulator===undefined){
         for (var i in collection){
           accumulator = collection[i];
           var accumulatorflag = 1;
@@ -174,9 +200,6 @@
     return accumulator;
   };
 
-  
-  
-  
   
   
   // Determine if the array or object contains a given value (using `===`).
