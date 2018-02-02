@@ -157,8 +157,28 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+      if (!accumulator && accumulator!==0){
+        for (var i in collection){
+          accumulator = collection[i];
+          var accumulatorflag = 1;
+          break;
+        }
+      }
+    _.each(collection, function(val){
+      if (!accumulatorflag){
+        accumulator = iterator(accumulator, val);
+      }else{
+        accumulatorflag = 0;
+      }
+    });
+    return accumulator;
   };
 
+  
+  
+  
+  
+  
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
