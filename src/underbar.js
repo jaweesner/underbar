@@ -106,23 +106,31 @@
     //faster implementation
     if (isSorted && !iterator){
       _each(array, function(val, i){
-        if (i==0 || !val === array[i-1]){ //short circuit to prevent index out of range error
+        if ( !i || val !== array[i-1]){ //short circuit to prevent index out of range error
           singleArray.push(val);
         }
       });
-   
+      
+    //Implementation using _.map not allowed by specs :(  
+   /*
     }else if (iterator){
       var uniqueMaps = [];
       _.each(_.map(array,iterator), function(val, i){
-          if (_.indexOf(uniqueMaps, val)==-1){
+          if (_.indexOf(uniqueMaps, val)===-1){
             uniqueMaps.push(val);
             uniqueArray.push(array[i]);
         }
       });
-      
+    */    
     }else{
-      _.each(array, function(val){
-        if (_.indexOf(uniqueArray, val)==-1){
+      var uniqueMaps = [];
+      _.each(array, function(val, i){
+        if(iterator){
+          if(_.indexOf(uniqueMaps, iterator(val)) === -1){
+            uniqueMaps.push(iterator(val));
+            uniqueArray.push(array[i]);            
+          }
+        }else if (_.indexOf(uniqueArray, val)==-1){
           uniqueArray.push(val);
         }
       });
