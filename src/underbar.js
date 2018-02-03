@@ -121,7 +121,8 @@
             uniqueArray.push(array[i]);
         }
       });
-    */    
+    */ 
+    
     }else{
       var uniqueMaps = [];
       _.each(array, function(val, i){
@@ -226,12 +227,31 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (!iterator){iterator=_.identity}
+    
+     return _.reduce(collection, function(allItemsPass, item) {
+      if (!allItemsPass) {
+        return false;
+      }
+      return Boolean(iterator(item));
+    }, true);
+    
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (!iterator){iterator=_.identity}
+    
+    return _.reduce(collection, function(anyItemsPasses, item) {
+      if (anyItemsPasses) {
+        return true;
+      }
+      return Boolean(iterator(item));
+      
+    }, false);
+    
   };
 
 
