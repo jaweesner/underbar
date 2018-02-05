@@ -328,7 +328,7 @@
     return function() {
       if (!alreadyCalled) {
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
-        // infromation from one function call to another.
+        // information from one function call to another.
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
@@ -369,6 +369,23 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var shuffledArray = new Array(array.length);
+    var getIndex = function(arr){
+      return Math.floor(Math.random() * arr.length);
+    };
+    //for each value in the original array, put into a random index on the array 
+    _.each(array,function(val){
+      var pushFlag = 0;
+      while(!pushFlag){
+        let tempIndex = getIndex(array)
+        if (shuffledArray[tempIndex] === undefined){
+          shuffledArray[tempIndex] = val;
+          pushFlag=1;
+        }
+      }
+      
+    });
+    return shuffledArray;
   };
 
 
