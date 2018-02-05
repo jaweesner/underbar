@@ -346,6 +346,37 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var resultsList=[] //array of (results and param list) {params: [param-list] result: X}
+    //function checks to see if there is an element in the coll
+    //check if the the array contains an object with a this.params = given params. if so, return result, else run function
+    return function(){
+      var onlyParams = _.pluck(resultsList, 'params');
+      var currentParams = Array.prototype.slice.call(arguments, 0,arguments.length); //get copy of params in array type obj. might not be needed?
+      var matchIndex = -1;
+      
+      _.each(onlyParams, function(prevArgArray, index){ //for each previous array of params
+        var indexCounter = -1;
+        var hasMatchedParams=_.reduce(currentParams, function(isMatched,liveParam){   ////check if the current input array matches the argument list
+          indexCounter++;
+          if (!isMatched){
+            return false;
+          }else{
+            return (liveParam.toString() == prevArgArray[indexCounter].toString());
+          }
+        },true)        
+        if (hasMatchedParams && (prevArgArray.length === currentParams.length)){
+          matchIndex = index;
+        }
+      });      
+      if(matchIndex>=0){
+        return resultsList[matchIndex].result;
+      }
+      else{
+        var newResult = func.apply(this, arguments);
+        resultsList.push({params: currentParams, result: newResult});
+        return newResult;
+      }
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -355,6 +386,9 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var inArgs = Array.prototype.slice.call(arguments, 2);
+    setTimeout(function(){func.apply(null,inArgs)},wait);
+    return;
   };
 
 
