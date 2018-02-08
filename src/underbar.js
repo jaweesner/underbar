@@ -9,6 +9,7 @@
   _.identity = function(val) {
     return val;
   };
+  
 
   /**
    * COLLECTIONS
@@ -242,8 +243,15 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    if (!iterator){iterator=_.identity}
+    if (!iterator){iterator=_.identity};
     
+    return !(_.every(collection, function(val){
+      return !iterator(val);
+    }));
+    }
+    
+    
+    /* Function without _every
     return _.reduce(collection, function(anyItemsPasses, item) {
       if (anyItemsPasses) {
         return true;
@@ -253,6 +261,7 @@
     }, false);
     
   };
+  */
 
 
   /**
