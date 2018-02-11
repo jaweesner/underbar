@@ -531,29 +531,43 @@
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  _.intersection = function() {
+  _.intersection = function () {
     var keyArray = arguments[0];
-    if (arguments.length === 1){return keyArray};
+    if (arguments.length === 1) {
+      return keyArray
+    };
     var otherArrays = Array.prototype.slice.call(arguments, 1);
     var intersect = [];
-    _.every(keyArray, function(keyVal){
-      if (_.every(otherArrays, function(arrVal){
-        return _.some(arrVal, function(arrSingleVal){
-          return arrSingleVal===keyVal;
-          })
-        }))
-      {    
-      intersect.push(keyVal);
+    _.each(keyArray, function (keyVal) {
+      if (_.every(otherArrays, function (arrVal) {
+          return _.contains(arrVal, keyVal);
+        })) {
+        intersect.push(keyVal);
       };
 
     });
-   return intersect;
+    return intersect;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
-  };
+    var keyArray = arguments[0];
+    if (arguments.length === 1) {
+      return keyArray
+    };
+    var otherArrays = Array.prototype.slice.call(arguments, 1);
+    var difference = [];
+    _.each(keyArray, function (keyVal) {
+      if (!(_.some(otherArrays, function (arrVal) {
+          return _.contains(arrVal, keyVal);
+        }))) {
+        difference.push(keyVal);
+      };
+
+    });
+    return difference;
+  }; 
 
   // Returns a function, that, when invoked, will only be triggered at most once
   // during a given window of time.  See the Underbar readme for extra details
