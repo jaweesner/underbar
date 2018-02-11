@@ -470,7 +470,6 @@
         return val[key];
       };
     }
-    //    else if (typeof iterator == 'function') {
     do {
       var swaps = 0;
       _.each(collection, function (val, index) {
@@ -515,11 +514,40 @@
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    if (result === undefined){
+      result = [];
+    };
+    return _.reduce(nestedArray, function(flatArray, element){
+      if (Array.isArray(element)){
+        _.flatten(element, flatArray);
+      }else{
+        flatArray.push(element);
+      }
+      
+      return flatArray;
+    },result);
+   
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var keyArray = arguments[0];
+    if (arguments.length === 1){return keyArray};
+    var otherArrays = Array.prototype.slice.call(arguments, 1);
+    var intersect = [];
+    _.every(keyArray, function(keyVal){
+      if (_.every(otherArrays, function(arrVal){
+        return _.some(arrVal, function(arrSingleVal){
+          return arrSingleVal===keyVal;
+          })
+        }))
+      {    
+      intersect.push(keyVal);
+      };
+
+    });
+   return intersect;
   };
 
   // Take the difference between one array and a number of other arrays.
